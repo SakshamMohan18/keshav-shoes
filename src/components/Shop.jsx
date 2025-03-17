@@ -3,6 +3,7 @@ import { shopData } from '../data/data';
 import { useDispatch } from 'react-redux';
 import { setAddItemToCart, setOpenCart } from '../app/CartSlice';
 import Cart from '../components/Cart';
+import ReactGA from 'react-ga4'; // ✅ Import ReactGA
 
 const Shop = () => {
   const [selectedType, setSelectedType] = useState('All');
@@ -26,6 +27,18 @@ const Shop = () => {
 
   const onCartToggle = () => {
     dispatch(setOpenCart({ cartState: true }));
+  };
+
+  // ✅ Track Search in Google Analytics
+  const handleSearch = (e) => {
+    setSearchQuery(e.target.value);
+
+    // ✅ Track search event in Google Analytics
+    ReactGA.event({
+      category: 'Search',
+      action: 'Performed Search',
+      label: e.target.value,
+    });
   };
 
   return (
@@ -52,7 +65,7 @@ const Shop = () => {
               {type}
             </button>
           ))}
-          
+
           {/* ✅ More Button */}
           <button
             className="py-2 px-6 rounded-md border bg-gray-100 text-black hover:bg-gray-300 transition"
@@ -68,7 +81,7 @@ const Shop = () => {
             type="text"
             placeholder="🔍 Search shoes..."
             value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
+            onChange={handleSearch}
             className="border px-4 py-2 w-full max-w-md rounded-md focus:ring-2 focus:ring-black transition"
           />
         </div>
